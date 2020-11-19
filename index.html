@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jan Heiland">
+  <meta name="author" content="Peter Benner">
+  <title>Space and Chaos-Expansion Galerkin POD Low-order Discretization of PDEs for Uncertainty Quantification</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/solarized.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-image="pics/MPI_bridge.jpg">
+  <h1 class="title">Space and Chaos-Expansion Galerkin POD Low-order Discretization of PDEs for Uncertainty Quantification</h1>
+  <p class="author">Jan Heiland</p>
+  <p class="author">Peter Benner</p>
+</section>
+
+<section id="features" class="title-slide slide level1">
+<h1>Features</h1>
+<ul>
+<li><p>Modelling of PDEs with uncertainties in (tensor) product spaces</p></li>
+<li><p>Galerkin discretization leads to tensor representation of the solution</p></li>
+<li><p><strong>HOSVD gives a multidimensional POD</strong></p></li>
+<li><p>which defines a low-order model for, say, Uncertainty Quantification</p></li>
+</ul>
+</section>
+
+<section>
+<section id="basic-idea" class="title-slide slide level1">
+<h1>Basic Idea</h1>
+
+</section>
+<section class="slide level2">
+
+<p><span class="math display">\[
+\DeclareMathOperator{\spann}{span}
+\def\xkotkn{{\mathbf x^{k_1 k_2 \dotsm k_N}}}
+\def\Vec{\mathop{\mathrm {vec}}\nolimits}
+\]</span> Consider the discrete product space with bases <span class="math display">\[
+    \mathcal V = \prod_{i=1}^N \mathcal V_{i}, \quad
+    \mathcal V_i = \spann\{\psi_i^k\}_{k=1,\dots,d_i}, \quad
+    \Psi_i:=[\psi_i^1, \dotsc, \psi_i^{d_i}]^T
+\]</span></p>
+<div class="fragment">
+<p>and write <span class="math inline">\(x\in \mathcal V\)</span> as <span class="math display">\[
+    x = \sum_{k_1 = 1}^{d_1}\sum_{k_2 = 1}^{d_2} \dotsm \sum_{k_N = 1}^{d_N} \xkotkn \psi_1^{k_1}\psi_2^{k_2}\dotsm\psi_N^{k_N}
+\]</span></p>
+</div>
+<div class="fragment">
+<p>or</p>
+<p><span class="math display">\[
+    x = \Vec(\mathbf X)^T \bigl [\Psi_N \otimes \dotsm \otimes \Psi_2 \otimes \Psi_1 \bigr], \quad \text{where }
+    \mathbf X = \bigl[ \xkotkn  \bigr].
+\]</span></p>
+</div>
+</section>
+<section id="that-is" class="slide level2">
+<h2>That is…</h2>
+<p><span class="math display">\[
+    x \in \prod_{i=1}^N \mathcal V_{i} \longleftrightarrow \mathbf X \in \mathbb R^{d_1 \times d_2 \times \dotsm \times d_N}
+\]</span></p>
+<p>and the tensor <span class="math inline">\(\mathbf X\)</span> can be reduced by</p>
+<p><span class="math display">\[
+\text{HOSVD} \longleftrightarrow \text{multidimensional (Galerkin) POD}
+\]</span></p>
+</section></section>
+<section>
+<section id="application-example" class="title-slide slide level1">
+<h1>Application Example</h1>
+
+</section>
+<section id="section" class="slide level2" data-background-image="pics/N7-physregs.png">
+<h2 data-background-image="pics/N7-physregs.png"></h2>
+</section>
+<section id="section-1" class="slide level2" data-background-image="pics/N7.png">
+<h2 data-background-image="pics/N7.png"></h2>
+<div class="fragment">
+<div style="position: absolute; width: 60%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 40px; text-align: left;">
+<p>A generic <em>convection-diffusion</em> problem <span class="math display">\[
+    b\cdot \nabla y- \nabla\cdot ( \kappa_\alpha \nabla y) = f,
+\]</span> where we assume that the diffusivity coefficient depends on a random vector <span class="math inline">\(\alpha=(\alpha_1, \alpha_2, \alpha_3, \alpha_4)\)</span>.</p>
+</div>
+</div>
+</section>
+<section id="ansatz" class="slide level2">
+<h2>Ansatz</h2>
+<p>Locate the solution <span class="math inline">\(y\)</span> (depending on space <span class="math inline">\(x\)</span> and the random variable <span class="math inline">\(\alpha\)</span>) in <span class="math display">\[
+    H_0^1(\Omega)\cdot L^2(\Gamma _ {1};\mathsf{d} \mathbb P _ {1}) \cdot L^2(\Gamma _ {2};\mathsf{d} \mathbb P _ {2}) \cdot \dotsm \cdot L^2(\Gamma _ {4};\mathsf{d} \mathbb P _ {4}).
+\]</span></p>
+<p>and use standard FEM and <em>Polynomial Chaos Expansion</em> (PCE) for discretization.</p>
+</section>
+<section id="approach" class="slide level2">
+<h2>Approach</h2>
+<ul>
+<li><p>Can train the POD for low-dimensional PCE discretizations</p></li>
+<li><p>And recover, e.g., the expected value of high-order PCE discretizations</p></li>
+<li><p>Speedup factor of about <span class="math inline">\(16\)</span>, huge memory savings</p></li>
+</ul>
+</section>
+<section id="result" class="slide level2" data-background-image="pics/pcepoddiff.png">
+<h2 data-background-image="pics/pcepoddiff.png">Result</h2>
+<div class="fragment">
+<div style="position: absolute; width: 60%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 40px; text-align: left;">
+<ul>
+<li><p>Error in <em>expected value</em> over space.</p></li>
+<li><p>Full order model: <span class="math inline">\(5^4 \times 90&#39;000\)</span> (<code>PCE x FEM</code>)</p></li>
+<li><p>Red order model: <span class="math inline">\(2^4 \times 90&#39;000\)</span> + <span class="math inline">\(5^4 \times 12\)</span></p></li>
+<li><p>Error level <span class="math inline">\(\approx 10^{-6}\)</span></p></li>
+<li><p>Monte Carlo: No convergence after <span class="math inline">\(10^6 \times 90&#39;000\)</span></p></li>
+</ul>
+</div>
+</div>
+</section></section>
+<section id="resources" class="title-slide slide level1">
+<h1>Resources</h1>
+<ul>
+<li><p>Submitted to <em>Int. J. Numerical Methods in Engineering</em></p></li>
+<li><p>Preprint: <a href="https://arxiv.org/abs/2009.01055">arxiv:2009.01055</a></p></li>
+<li><p>Code: <a href="https://doi.org/10.5281/zenodo.4005724">doi:10.5281/zenodo.4005724</a></p></li>
+</ul>
+</section>
+
+<section id="csc-tech-talks" class="title-slide slide level1">
+<h1>CSC tech talks</h1>
+<ul>
+<li><p>Idea: A topic and <strong>everyone</strong> brings his workflow</p>
+<ul>
+<li><p>can be hand-drawn flow chart</p></li>
+<li><p>plan for 5 minutes presentation time</p></li>
+</ul></li>
+<li><p>In the session, we draw will <strong>randomly choose 3</strong> candidates</p></li>
+<li><p>After that, we will discuss the workflows</p></li>
+<li><p>Dates and topics:</p>
+<ul>
+<li><p>November 26: <strong>paper writing</strong></p></li>
+<li><p>December 3: <strong>code writing</strong></p></li>
+</ul></li>
+</ul>
+</section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        // Number of slides away from the current that are visible
+        viewDistance: 15,
+        // Parallax background image
+        parallaxBackgroundImage: 'pics/csc-en.svg', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+        // Parallax background size
+        parallaxBackgroundSize: '1000px 1200px', // CSS syntax, e.g. "2100px 900px"
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+        height: 880,
+        // Factor of the display size that should remain empty around the content
+        margin: 0.05,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
