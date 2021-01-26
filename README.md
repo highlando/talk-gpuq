@@ -9,11 +9,11 @@ occasions:
 
 # GAMM CSE Workshop 
 
----
+```yaml
 date: 2021-01-29
 location: virtual
 branch/tag: main
----
+```
 
 ## Target audience
 
