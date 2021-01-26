@@ -2,7 +2,7 @@
 author: 
  - Jan Heiland 
  - Peter Benner
-title: Space and Chaos-Expansion Galerkin POD Low-order Discretization of PDEs for Uncertainty Quantification 
+title: Space and Chaos-Expansion Galerkin POD for Uncertainty Quantification of PDEs with Random Parameters
 title-slide-attributes:
     data-background-image: pics/MPI_bridge.jpg
 parallaxBackgroundImage: pics/csc-en.svg

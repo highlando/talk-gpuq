@@ -1,5 +1,5 @@
 ---
-title:
+title: Space and Chaos-Expansion Galerkin POD for Uncertainty Quantification of PDEs with Random Parameters
 author:
  - Peter Benner
  - Jan Heiland
