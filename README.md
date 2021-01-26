@@ -1,10 +1,16 @@
 ---
-title: Space and Chaos-Expansion Galerkin POD for Uncertainty Quantification of PDEs with Random Parameters
+title: Space/PCE genPOD for UQ of PDEs w/ Random Parameters
 author:
  - Peter Benner
  - Jan Heiland
+occasions: 
+ - Gamm CSE Workshop
+---
+
+# GAMM CSE Workshop 
+
+---
 date: 2021-01-29
-occasion: Gamm CSE Workshop
 location: virtual
 branch/tag: main
 ---
