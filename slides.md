@@ -22,6 +22,7 @@ parallaxBackgroundSize: 1000px 1200px
 # Basic Idea
 
 ---
+
 $$
 \DeclareMathOperator{\spann}{span}
 \def\xkotkn{{\mathbf x^{k_1 k_2 \dotsm k_N}}}
@@ -40,7 +41,6 @@ and write $x\in \mathcal V$ as
 $$
     x = \sum_{k_1 = 1}^{d_1}\sum_{k_2 = 1}^{d_2} \dotsm \sum_{k_N = 1}^{d_N} \xkotkn \psi_1^{k_1}\psi_2^{k_2}\dotsm\psi_N^{k_N}
 $$
-
 
 . . .
 
@@ -81,9 +81,11 @@ where we assume that the diffusivity coefficient depends on a random vector $\al
 
 ## Ansatz
 
+
 \def\Hoi{H_0^1(\Omega)}
 \providecommand\Ltgi[1]{L^2(\Gamma _ {#1};\nspinva{#1})}
 \providecommand{\nspinva}[1]{\mathsf{d} \mathbb P _ {#1}}
+
 
 Locate the solution $y$ (depending on space $x$ and the random variable
 $\alpha$) in
