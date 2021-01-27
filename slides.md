@@ -1,33 +1,106 @@
 ---
 author: 
- - Jan Heiland 
- - Peter Benner
-title: Space and Chaos-Expansion Galerkin POD for Uncertainty Quantification of PDEs with Random Parameters
+ - Jan Heiland (MPI Magdeburg)
+ - Peter Benner (MPI Magdeburg)
+title: Space and Chaos-Expansion Galerkin POD for UQ of PDEs with Random Parameters
 title-slide-attributes:
     data-background-image: pics/MPI_bridge.jpg
 parallaxBackgroundImage: pics/csc-en.svg
 parallaxBackgroundSize: 1000px 1200px
 ---
-
-# Features
-
- * Modelling of PDEs with uncertainties in (tensor) product spaces 
-
- * Galerkin discretization leads to tensor representation of the solution
-
- * **HOSVD gives a multidimensional POD**
-
- * which defines a low-order model for, say, Uncertainty Quantification
-
-# Basic Idea
+# Introduction
 
 ---
 
+## Example Problem Setup
+
+ * The *heat equation* with uncertainty in the coefficient $\kappa$:
+$$
+-\kappa(\alpha) \Delta y = f,
+$$
+where $\alpha$ is a random variable.
+
+ * Then, *the* solution $y$ is a random variable depending of $\alpha$.
+
+ * Of interest
+ $$
+ \mathbb E_\alpha y
+ $$
+ the expected value of the solution $y$.
+
+## Sampling Approach (Monte Carlo)
+
+1. Draw a sample of $\alpha$: $$(\alpha^{(1)}, \alpha^{(2)}, \alpha^{(3)}, \alpha^{(4)})$$
+
+2. Compute the sample of $y(\alpha)$:  $$(y(\alpha^{(1)}), y(\alpha^{(2)}), y(\alpha^{(3)}), y(\alpha^{(4)}))$$
+
+3. Compute the empirical expected value
+$$
+\hat {\mathbb E}_\alpha = \frac{1}{4}(y(\alpha^{(1)})+ y(\alpha^{(2)})+ y(\alpha^{(3)})+ y(\alpha^{(4)}))
+$$
+
+## Collocation/Galerkin Approaches
+
+1. *Discretize* the uncertainty, e.g., by shape functions $\eta_i$
+$$
+\hat y(\alpha) = \sum_{i=1}^4 y_i \eta_i(\alpha)
+$$
+
+2. Compute the coefficient functions $y_i$, e.g., through solving
+$$
+-\kappa(\alpha^{(i)})\Delta \hat y = f
+$$
+at given collocation points.
+
+3. Compute the expected value of $\hat y$
+$$
+\mathbb E_\alpha y \approx \mathbb E_\alpha \hat y = \sum_{i=1}^4 y_i \mathbb E_\alpha \eta_i.
+$$
+
+## Overview of approaches
+
+* Monte Carlo Methods
+
+* Galerkin/Collocation Methods
+
+
+# Multidimensional Galerkin POD
+
+## Setup
 $$
 \DeclareMathOperator{\spann}{span}
 \def\xkotkn{{\mathbf x^{k_1 k_2 \dotsm k_N}}}
 \def\Vec{\mathop{\mathrm {vec}}\nolimits}
+\def\Ltt{L^2((0,T))}
+\def\Lto{L^2(\Omega)}
+\def\Ltg{L^2(\Gamma;d\mathbb P_\alpha)}
+\def\by{\mathbf y}
 $$
+Consider a multivariable function $y(t,x;\alpha)$:
+$$
+y\colon (0,T) \times \Omega \times \Gamma \to \mathbb R
+$$
+
+and the separated spaces for time, space, and uncertainty:
+$$
+\Ltt,\quad \Lto, \quad\text{and}\quad\Ltg.
+$$
+
+## Time-Space-PCE Galerkin
+
+Finite dimensional "subspaces":
+
+* $S = \spann\{\psi_1, \dotsc, \psi_s\} \subset \Ltt$,
+* $X = \spann\{\phi_1, \dotsc, \phi_r\} \subset \Lto$,
+* $W = \spann\{\eta_1, \dotsc, \eta_p\}~`\subset\mspace{-4mu}`~ \Ltg$,
+
+and the Galerkin ansatz in $\by \in S\otimes X \otimes W$:
+$$
+\by = \sum\sum\sum
+$$
+
+---
+
 Consider the discrete product space with bases
 $$
     \mathcal V = \prod_{i=1}^N \mathcal V_{i}, \quad
