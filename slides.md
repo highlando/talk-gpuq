@@ -4,10 +4,11 @@ author:
  - Peter Benner (MPI Magdeburg)
 title: Space and Chaos-Expansion Galerkin POD for UQ of PDEs with Random Parameters
 title-slide-attributes:
-    data-background-image: pics/MPI_bridge.jpg
+    data-background-image: pics/mpi-bridge.gif
 parallaxBackgroundImage: pics/csc-en.svg
 parallaxBackgroundSize: 1000px 1200px
 ---
+
 # Introduction
 
 ---
@@ -30,9 +31,11 @@ where $\alpha$ is a random variable.
 
 ## Sampling Approach (Monte Carlo)
 
-1. Draw a sample of $\alpha$: $$(\alpha^{(1)}, \alpha^{(2)}, \alpha^{(3)}, \alpha^{(4)})$$
+1. Draw a sample of $\alpha$: 
+$$(\alpha^{(1)}, \alpha^{(2)}, \alpha^{(3)}, \alpha^{(4)})$$
 
-2. Compute the sample of $y(\alpha)$:  $$(y(\alpha^{(1)}), y(\alpha^{(2)}), y(\alpha^{(3)}), y(\alpha^{(4)}))$$
+2. Compute the sample of $y(\alpha)$:  
+$$(y(\alpha^{(1)}), y(\alpha^{(2)}), y(\alpha^{(3)}), y(\alpha^{(4)}))$$
 
 3. Compute the empirical expected value
 $$
@@ -70,6 +73,7 @@ $$
 $$
 \DeclareMathOperator{\spann}{span}
 \def\xkotkn{{\mathbf x^{k_1 k_2 \dotsm k_N}}}
+\def\yijk{\mathbf y^{i\,j\,k}}
 \def\Vec{\mathop{\mathrm {vec}}\nolimits}
 \def\Ltt{L^2((0,T))}
 \def\Lto{L^2(\Omega)}
@@ -86,7 +90,7 @@ $$
 \Ltt,\quad \Lto, \quad\text{and}\quad\Ltg.
 $$
 
-## Time-Space-PCE Galerkin
+## Time-Space-PCE Galerkin Discretization
 
 Finite dimensional "subspaces":
 
@@ -96,8 +100,18 @@ Finite dimensional "subspaces":
 
 and the Galerkin ansatz in $\by \in S\otimes X \otimes W$:
 $$
-\by = \sum\sum\sum
+\by = \sum_{i=1}^s\sum_{j=1}^r\sum_{k=1}^p \yijk \psi_i \phi_j \eta_k
 $$
+
+## Time-Space-PCE Galerkin POD
+
+Goal: Dimension Reduction
+
+Idea: Find a subspace $\hat S \subset S$ and projection $\Pi_{\hat S}$ such that
+$$
+\|\Pi_{\hat S} \by - \by\|_{S\otimes X \otimes W} 
+$$
+is minimal.
 
 ---
 
@@ -202,20 +216,3 @@ and use standard FEM and *Polynomial Chaos Expansion* (PCE) for discretization.
 
 * Code: [doi:10.5281/zenodo.4005724](https://doi.org/10.5281/zenodo.4005724)
 
-# CSC tech talks
-
-* Idea: A topic and **everyone** brings his workflow
-
-  * can be hand-drawn flow chart
-
-  * plan for 5 minutes presentation time
-
-* In the session, we draw will **randomly choose 3** candidates
-
-* After that, we will discuss the workflows
-
-* Dates and topics:
-
-  * November 26: **paper writing**
-
-  * December 3: **code writing**
