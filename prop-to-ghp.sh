@@ -3,7 +3,7 @@ git add slides.md
 git commit -m 'updated the slides md'
 
 git checkout pandoc-outputs
-git merge master
+git merge main
 ./mkdc.sh
 git add index.html
 git commit -m 'updated the slides md and now the html'
