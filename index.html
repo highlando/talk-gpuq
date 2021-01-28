@@ -76,8 +76,23 @@
 <section id="overview-of-approaches" class="slide level2">
 <h2>Overview of approaches</h2>
 <ul>
-<li><p>Monte Carlo Methods</p></li>
-<li><p>Galerkin/Collocation Methods</p></li>
+<li>Monte Carlo (MC)
+<ul>
+<li>slow, but highly parallelizable</li>
+<li>many <em>improvements</em> like <em>Multi Level MC</em>, <em>Markov Chain MC</em></li>
+<li>little overhead for additional dimensions</li>
+</ul></li>
+<li>Galerkin/Collocation methods
+<ul>
+<li>e.g., <em>Polynomial Chaos Expansion</em> (PCE)</li>
+<li>good convergence, effort grows exponentially with the dimensions</li>
+<li>model reduction needed: <em>PCA</em>, <em>sparse grids</em>, <em>low-rank tensor formats</em></li>
+</ul></li>
+<li>This talk:
+<ul>
+<li>tensor representation of <em>PCE</em></li>
+<li>reduction through multidimensional POD</li>
+</ul></li>
 </ul>
 </section></section>
 <section>
@@ -89,7 +104,6 @@
 <h2>Setup</h2>
 <p><span class="math display">\[
 \DeclareMathOperator{\spann}{span}
-\def\xkotkn{{\mathbf x^{k_1 k_2 \dotsm k_N}}}
 \def\yijk{\mathbf y^{i\,j\,k}}
 \def\Vec{\mathop{\mathrm {vec}}\nolimits}
 \def\Ltt{L^2((0,T))}
@@ -120,37 +134,32 @@ y\colon (0,T) \times \Omega \times \Gamma \to \mathbb R
 <p>Goal: Dimension Reduction</p>
 <p>Idea: Find a subspace <span class="math inline">\(\hat S \subset S\)</span> and projection <span class="math inline">\(\Pi_{\hat S}\)</span> such that <span class="math display">\[
 \|\Pi_{\hat S} \by - \by\|_{S\otimes X \otimes W} 
-\]</span> is minimal.</p>
+\]</span> is minimal…</p>
+<div class="fragment">
+<p>minimal in the sense that if there exists <span class="math inline">\(\hat{\hat S}\)</span> such that <span class="math inline">\(\|\Pi_{\hat{\hat S}} \by - \by\|_{S\otimes X \otimes W}\)</span> is smaller, than the dimension of <span class="math inline">\(\hat{\hat S}\)</span> is larger than that of <span class="math inline">\(\hat S\)</span>.</p>
+</div>
+</section>
+<section id="solution-hosvd-higher-order-svd" class="slide level2">
+<h2>Solution: HOSVD – higher order SVD</h2>
+<p>Recall: <span class="math display">\[
+\by = \sum_{i=1}^s\sum_{j=1}^r\sum_{k=1}^p \yijk \psi_i \phi_j \eta_k
+\]</span> that is, with <span class="math inline">\(\mathbf Y = [\yijk]\)</span>, the discrete function</p>
+<p><span class="math display">\[
+    y \in S\otimes X \otimes W \longleftrightarrow \mathbf Y \in \mathbb R^{s \times r \times p}
+\]</span></p>
+<p>can be interpreted and reduced as a tensor <span class="math inline">\(\mathbf Y\)</span>.</p>
 </section>
 <section class="slide level2">
 
-<p>Consider the discrete product space with bases <span class="math display">\[
-    \mathcal V = \prod_{i=1}^N \mathcal V_{i}, \quad
-    \mathcal V_i = \spann\{\psi_i^k\}_{k=1,\dots,d_i}, \quad
-    \Psi_i:=[\psi_i^1, \dotsc, \psi_i^{d_i}]^T
-\]</span></p>
-<div class="fragment">
-<p>and write <span class="math inline">\(x\in \mathcal V\)</span> as <span class="math display">\[
-    x = \sum_{k_1 = 1}^{d_1}\sum_{k_2 = 1}^{d_2} \dotsm \sum_{k_N = 1}^{d_N} \xkotkn \psi_1^{k_1}\psi_2^{k_2}\dotsm\psi_N^{k_N}
-\]</span></p>
-</div>
-<div class="fragment">
-<p>or</p>
-<p><span class="math display">\[
-    x = \Vec(\mathbf X)^T \bigl [\Psi_N \otimes \dotsm \otimes \Psi_2 \otimes \Psi_1 \bigr], \quad \text{where }
-    \mathbf X = \bigl[ \xkotkn  \bigr].
-\]</span></p>
-</div>
-</section>
-<section id="that-is" class="slide level2">
-<h2>That is…</h2>
-<p><span class="math display">\[
-    x \in \prod_{i=1}^N \mathcal V_{i} \longleftrightarrow \mathbf X \in \mathbb R^{d_1 \times d_2 \times \dotsm \times d_N}
-\]</span></p>
-<p>and the tensor <span class="math inline">\(\mathbf X\)</span> can be reduced by</p>
-<p><span class="math display">\[
-\text{HOSVD} \longleftrightarrow \text{multidimensional (Galerkin) POD}
-\]</span></p>
+<p>Vice versa:</p>
+<blockquote>
+<p>Theorem: The <span class="math inline">\(\hat s\)</span>-dimensional subspace <span class="math inline">\(\hat S\subset S\)</span> that optimally parametrizes <span class="math inline">\(y\in S\otimes X \otimes V\)</span> in <span class="math inline">\(\hat S \otimes X \otimes V\)</span> is defined by the <span class="math inline">\(\hat s\)</span> leading mode-(1) singular vectors of <span class="math inline">\(\mathbf Y \in \mathbb R^{s \times r \times p}\)</span></p>
+</blockquote>
+<p>Notes:</p>
+<ul>
+<li>The reduced spaces define a reduced Galerkin discretization.</li>
+<li>This works for any dimension in a product space <span class="math inline">\(V = \prod_{\ell=1}^NV_i\)</span>.</li>
+</ul>
 </section></section>
 <section>
 <section id="application-example" class="title-slide slide level1">
@@ -173,17 +182,31 @@ y\colon (0,T) \times \Omega \times \Gamma \to \mathbb R
 <section id="ansatz" class="slide level2">
 <h2>Ansatz</h2>
 <p>Locate the solution <span class="math inline">\(y\)</span> (depending on space <span class="math inline">\(x\)</span> and the random variable <span class="math inline">\(\alpha\)</span>) in <span class="math display">\[
-    H_0^1(\Omega)\cdot L^2(\Gamma _ {1};\mathsf{d} \mathbb P _ {1}) \cdot L^2(\Gamma _ {2};\mathsf{d} \mathbb P _ {2}) \cdot \dotsm \cdot L^2(\Gamma _ {4};\mathsf{d} \mathbb P _ {4}).
+    \Lto \cdot L^2(\Gamma _ {1};\mathsf{d} \mathbb P _ {1}) \cdot L^2(\Gamma _ {2};\mathsf{d} \mathbb P _ {2}) \cdot \dotsm \cdot L^2(\Gamma _ {4};\mathsf{d} \mathbb P _ {4}).
 \]</span></p>
-<p>and use standard FEM and <em>Polynomial Chaos Expansion</em> (PCE) for discretization.</p>
+<p>and use</p>
+<ul>
+<li>standard FEM space <span class="math inline">\(X\)</span> to discretize <span class="math inline">\(\Lto\)</span>,</li>
+<li>and <em>Polynomial Chaos Expansions</em> (PCE), e.g.,
+<ul>
+<li>Lagrange polynomials with</li>
+<li>weights and nodes chosen according to the distribution of <span class="math inline">\(\alpha_i\)</span></li>
+<li>to define <span class="math inline">\(W_i\)</span>, <span class="math inline">\(i=1,2,3,4\)</span>.</li>
+</ul></li>
+</ul>
 </section>
 <section id="approach" class="slide level2">
 <h2>Approach</h2>
-<ul>
-<li><p>Can train the POD for low-dimensional PCE discretizations</p></li>
-<li><p>And recover, e.g., the expected value of high-order PCE discretizations</p></li>
-<li><p>Speedup factor of about <span class="math inline">\(16\)</span>, huge memory savings</p></li>
-</ul>
+<ol type="1">
+<li><p>Compute the discrete solution <span class="math display">\[
+y\in X\otimes \bar W_1 \otimes \bar W_2 \otimes \bar W_3 \otimes \bar W_4
+\]</span> for a low-dimensional PCE discretizations.</p></li>
+<li><p>Reduce the spatial discretization <span class="math inline">\(X \leftarrow \hat X\)</span></p></li>
+<li><p>Compute the discrete solution <span class="math display">\[
+y\in \hat X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4
+\]</span> for a high-dimensional PCE discretizations.</p></li>
+<li><p>Compare to <span class="math inline">\(y\in X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4\)</span></p></li>
+</ol>
 </section>
 <section id="result" class="slide level2" data-background-image="pics/pcepoddiff.png">
 <h2 data-background-image="pics/pcepoddiff.png">Result</h2>
@@ -191,22 +214,40 @@ y\colon (0,T) \times \Omega \times \Gamma \to \mathbb R
 <div style="position: absolute; width: 60%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 40px; text-align: left;">
 <ul>
 <li><p>Error in <em>expected value</em> over space.</p></li>
-<li><p>Full order model: <span class="math inline">\(5^4 \times 90&#39;000\)</span> (<code>PCE x FEM</code>)</p></li>
-<li><p>Red order model: <span class="math inline">\(2^4 \times 90&#39;000\)</span> + <span class="math inline">\(5^4 \times 12\)</span></p></li>
+<li><p>Full solve: <span class="math inline">\(5^4 \times 90&#39;000\)</span> (<code>PCE x FEM</code>)</p></li>
+<li><p>POD + training: <span class="math inline">\(2^4 \times 90&#39;000\)</span> + <span class="math inline">\(5^4 \times 12\)</span></p></li>
 <li><p>Error level <span class="math inline">\(\approx 10^{-6}\)</span></p></li>
+<li><p>Speed up factor <span class="math inline">\(\approx 16\)</span></p></li>
+<li><p>Saved memory <span class="math inline">\(\approx 97\)</span>%</p></li>
 <li><p>Monte Carlo: No convergence after <span class="math inline">\(10^6 \times 90&#39;000\)</span></p></li>
 </ul>
 </div>
 </div>
 </section></section>
-<section id="resources" class="title-slide slide level1">
-<h1>Resources</h1>
+<section>
+<section id="conclusion" class="title-slide slide level1">
+<h1>Conclusion</h1>
+
+</section>
+<section id="and-outlook" class="slide level2">
+<h2>… and Outlook</h2>
+<ul>
+<li><p>Multidimensional Galerkin POD applies naturally for FEM/PCE discretizations.</p></li>
+<li><p>Significant saves of computation time and memory requirements.</p></li>
+<li><p>Outlook: Optimal Control and time dependent problems.</p></li>
+</ul>
+<div class="fragment">
+<p>Thank You!</p>
+</div>
+</section>
+<section id="resources" class="slide level2">
+<h2>Resources</h2>
 <ul>
 <li><p>Submitted to <em>Int. J. Numerical Methods in Engineering</em></p></li>
 <li><p>Preprint: <a href="https://arxiv.org/abs/2009.01055">arxiv:2009.01055</a></p></li>
 <li><p>Code: <a href="https://doi.org/10.5281/zenodo.4005724">doi:10.5281/zenodo.4005724</a></p></li>
 </ul>
-</section>
+</section></section>
     </div>
   </div>
 
