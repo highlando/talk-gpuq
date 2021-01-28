@@ -1,32 +1,120 @@
 ---
 author: 
- - Jan Heiland 
- - Peter Benner
-title: Space and Chaos-Expansion Galerkin POD Low-order Discretization of PDEs for Uncertainty Quantification 
+ - Jan Heiland (MPI Magdeburg)
+ - Peter Benner (MPI Magdeburg)
+title: Space and Chaos-Expansion Galerkin POD for UQ of PDEs with Random Parameters
 title-slide-attributes:
-    data-background-image: pics/MPI_bridge.jpg
+    data-background-image: pics/mpi-bridge.gif
 parallaxBackgroundImage: pics/csc-en.svg
 parallaxBackgroundSize: 1000px 1200px
 ---
 
-# Features
-
- * Modelling of PDEs with uncertainties in (tensor) product spaces 
-
- * Galerkin discretization leads to tensor representation of the solution
-
- * **HOSVD gives a multidimensional POD**
-
- * which defines a low-order model for, say, Uncertainty Quantification
-
-# Basic Idea
+# Introduction
 
 ---
+
+## Example Problem Setup
+
+ * The *heat equation* with uncertainty in the coefficient $\kappa$:
+$$
+-\kappa(\alpha) \Delta y = f,
+$$
+where $\alpha$ is a random variable.
+
+ * Then, *the* solution $y$ is a random variable depending of $\alpha$.
+
+ * Of interest
+ $$
+ \mathbb E_\alpha y
+ $$
+ the expected value of the solution $y$.
+
+## Sampling Approach (Monte Carlo)
+
+1. Draw a sample of $\alpha$: 
+$$(\alpha^{(1)}, \alpha^{(2)}, \alpha^{(3)}, \alpha^{(4)})$$
+
+2. Compute the sample of $y(\alpha)$:  
+$$(y(\alpha^{(1)}), y(\alpha^{(2)}), y(\alpha^{(3)}), y(\alpha^{(4)}))$$
+
+3. Compute the empirical expected value
+$$
+\hat {\mathbb E}_\alpha = \frac{1}{4}(y(\alpha^{(1)})+ y(\alpha^{(2)})+ y(\alpha^{(3)})+ y(\alpha^{(4)}))
+$$
+
+## Collocation/Galerkin Approaches
+
+1. *Discretize* the uncertainty, e.g., by shape functions $\eta_i$
+$$
+\hat y(\alpha) = \sum_{i=1}^4 y_i \eta_i(\alpha)
+$$
+
+2. Compute the coefficient functions $y_i$, e.g., through solving
+$$
+-\kappa(\alpha^{(i)})\Delta \hat y = f
+$$
+at given collocation points.
+
+3. Compute the expected value of $\hat y$
+$$
+\mathbb E_\alpha y \approx \mathbb E_\alpha \hat y = \sum_{i=1}^4 y_i \mathbb E_\alpha \eta_i.
+$$
+
+## Overview of approaches
+
+* Monte Carlo Methods
+
+* Galerkin/Collocation Methods
+
+
+# Multidimensional Galerkin POD
+
+## Setup
 $$
 \DeclareMathOperator{\spann}{span}
 \def\xkotkn{{\mathbf x^{k_1 k_2 \dotsm k_N}}}
+\def\yijk{\mathbf y^{i\,j\,k}}
 \def\Vec{\mathop{\mathrm {vec}}\nolimits}
+\def\Ltt{L^2((0,T))}
+\def\Lto{L^2(\Omega)}
+\def\Ltg{L^2(\Gamma;d\mathbb P_\alpha)}
+\def\by{\mathbf y}
 $$
+Consider a multivariable function $y(t,x;\alpha)$:
+$$
+y\colon (0,T) \times \Omega \times \Gamma \to \mathbb R
+$$
+
+and the separated spaces for time, space, and uncertainty:
+$$
+\Ltt,\quad \Lto, \quad\text{and}\quad\Ltg.
+$$
+
+## Time-Space-PCE Galerkin Discretization
+
+Finite dimensional "subspaces":
+
+* $S = \spann\{\psi_1, \dotsc, \psi_s\} \subset \Ltt$,
+* $X = \spann\{\phi_1, \dotsc, \phi_r\} \subset \Lto$,
+* $W = \spann\{\eta_1, \dotsc, \eta_p\}~`\subset\mspace{-4mu}`~ \Ltg$,
+
+and the Galerkin ansatz in $\by \in S\otimes X \otimes W$:
+$$
+\by = \sum_{i=1}^s\sum_{j=1}^r\sum_{k=1}^p \yijk \psi_i \phi_j \eta_k
+$$
+
+## Time-Space-PCE Galerkin POD
+
+Goal: Dimension Reduction
+
+Idea: Find a subspace $\hat S \subset S$ and projection $\Pi_{\hat S}$ such that
+$$
+\|\Pi_{\hat S} \by - \by\|_{S\otimes X \otimes W} 
+$$
+is minimal.
+
+---
+
 Consider the discrete product space with bases
 $$
     \mathcal V = \prod_{i=1}^N \mathcal V_{i}, \quad
@@ -40,7 +128,6 @@ and write $x\in \mathcal V$ as
 $$
     x = \sum_{k_1 = 1}^{d_1}\sum_{k_2 = 1}^{d_2} \dotsm \sum_{k_N = 1}^{d_N} \xkotkn \psi_1^{k_1}\psi_2^{k_2}\dotsm\psi_N^{k_N}
 $$
-
 
 . . .
 
@@ -81,9 +168,11 @@ where we assume that the diffusivity coefficient depends on a random vector $\al
 
 ## Ansatz
 
+
 \def\Hoi{H_0^1(\Omega)}
 \providecommand\Ltgi[1]{L^2(\Gamma _ {#1};\nspinva{#1})}
 \providecommand{\nspinva}[1]{\mathsf{d} \mathbb P _ {#1}}
+
 
 Locate the solution $y$ (depending on space $x$ and the random variable
 $\alpha$) in
@@ -127,20 +216,3 @@ and use standard FEM and *Polynomial Chaos Expansion* (PCE) for discretization.
 
 * Code: [doi:10.5281/zenodo.4005724](https://doi.org/10.5281/zenodo.4005724)
 
-# CSC tech talks
-
-* Idea: A topic and **everyone** brings his workflow
-
-  * can be hand-drawn flow chart
-
-  * plan for 5 minutes presentation time
-
-* In the session, we draw will **randomly choose 3** candidates
-
-* After that, we will discuss the workflows
-
-* Dates and topics:
-
-  * November 26: **paper writing**
-
-  * December 3: **code writing**
