@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
-  <meta name="author" content="Jan Heiland">
-  <meta name="author" content="Peter Benner">
-  <title>Space and Chaos-Expansion Galerkin POD Low-order Discretization of PDEs for Uncertainty Quantification</title>
+  <meta name="author" content="Jan Heiland (MPI Magdeburg)">
+  <meta name="author" content="Peter Benner (MPI Magdeburg)">
+  <title>Space and Chaos-Expansion Galerkin POD for UQ of PDEs with Random Parameters</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -25,34 +25,106 @@
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide" data-background-image="pics/MPI_bridge.jpg">
-  <h1 class="title">Space and Chaos-Expansion Galerkin POD Low-order Discretization of PDEs for Uncertainty Quantification</h1>
-  <p class="author">Jan Heiland</p>
-  <p class="author">Peter Benner</p>
-</section>
-
-<section id="features" class="title-slide slide level1">
-<h1>Features</h1>
-<ul>
-<li><p>Modelling of PDEs with uncertainties in (tensor) product spaces</p></li>
-<li><p>Galerkin discretization leads to tensor representation of the solution</p></li>
-<li><p><strong>HOSVD gives a multidimensional POD</strong></p></li>
-<li><p>which defines a low-order model for, say, Uncertainty Quantification</p></li>
-</ul>
+<section id="title-slide" data-background-image="pics/mpi-bridge.gif">
+  <h1 class="title">Space and Chaos-Expansion Galerkin POD for UQ of PDEs with Random Parameters</h1>
+  <p class="author">Jan Heiland (MPI Magdeburg)</p>
+  <p class="author">Peter Benner (MPI Magdeburg)</p>
 </section>
 
 <section>
-<section id="basic-idea" class="title-slide slide level1">
-<h1>Basic Idea</h1>
+<section id="introduction" class="title-slide slide level1">
+<h1>Introduction</h1>
 
 </section>
-<section class="slide level2">
+<section id="example-problem-setup" class="slide level2">
+<h2>Example Problem Setup</h2>
+<ul>
+<li><p>The <em>heat equation</em> with uncertainty in the coefficient <span class="math inline">\(\kappa\)</span>: <span class="math display">\[
+-\kappa(\alpha) \Delta y = f,
+\]</span> where <span class="math inline">\(\alpha\)</span> is a random variable.</p></li>
+<li><p>Then, <em>the</em> solution <span class="math inline">\(y\)</span> is a random variable depending of <span class="math inline">\(\alpha\)</span>.</p></li>
+<li><p>Of interest <span class="math display">\[
+ \mathbb E_\alpha y
+ \]</span> the expected value of the solution <span class="math inline">\(y\)</span>.</p></li>
+</ul>
+</section>
+<section id="sampling-approach-monte-carlo" class="slide level2">
+<h2>Sampling Approach (Monte Carlo)</h2>
+<ol type="1">
+<li><p>Draw a sample of <span class="math inline">\(\alpha\)</span>: <span class="math display">\[(\alpha^{(1)}, \alpha^{(2)}, \alpha^{(3)}, \alpha^{(4)})\]</span></p></li>
+<li><p>Compute the sample of <span class="math inline">\(y(\alpha)\)</span>:<br />
+<span class="math display">\[(y(\alpha^{(1)}), y(\alpha^{(2)}), y(\alpha^{(3)}), y(\alpha^{(4)}))\]</span></p></li>
+<li><p>Compute the empirical expected value <span class="math display">\[
+\hat {\mathbb E}_\alpha = \frac{1}{4}(y(\alpha^{(1)})+ y(\alpha^{(2)})+ y(\alpha^{(3)})+ y(\alpha^{(4)}))
+\]</span></p></li>
+</ol>
+</section>
+<section id="collocationgalerkin-approaches" class="slide level2">
+<h2>Collocation/Galerkin Approaches</h2>
+<ol type="1">
+<li><p><em>Discretize</em> the uncertainty, e.g., by shape functions <span class="math inline">\(\eta_i\)</span> <span class="math display">\[
+\hat y(\alpha) = \sum_{i=1}^4 y_i \eta_i(\alpha)
+\]</span></p></li>
+<li><p>Compute the coefficient functions <span class="math inline">\(y_i\)</span>, e.g., through solving <span class="math display">\[
+-\kappa(\alpha^{(i)})\Delta \hat y = f
+\]</span> at given collocation points.</p></li>
+<li><p>Compute the expected value of <span class="math inline">\(\hat y\)</span> <span class="math display">\[
+\mathbb E_\alpha y \approx \mathbb E_\alpha \hat y = \sum_{i=1}^4 y_i \mathbb E_\alpha \eta_i.
+\]</span></p></li>
+</ol>
+</section>
+<section id="overview-of-approaches" class="slide level2">
+<h2>Overview of approaches</h2>
+<ul>
+<li><p>Monte Carlo Methods</p></li>
+<li><p>Galerkin/Collocation Methods</p></li>
+</ul>
+</section></section>
+<section>
+<section id="multidimensional-galerkin-pod" class="title-slide slide level1">
+<h1>Multidimensional Galerkin POD</h1>
 
+</section>
+<section id="setup" class="slide level2">
+<h2>Setup</h2>
 <p><span class="math display">\[
 \DeclareMathOperator{\spann}{span}
 \def\xkotkn{{\mathbf x^{k_1 k_2 \dotsm k_N}}}
+\def\yijk{\mathbf y^{i\,j\,k}}
 \def\Vec{\mathop{\mathrm {vec}}\nolimits}
-\]</span> Consider the discrete product space with bases <span class="math display">\[
+\def\Ltt{L^2((0,T))}
+\def\Lto{L^2(\Omega)}
+\def\Ltg{L^2(\Gamma;d\mathbb P_\alpha)}
+\def\by{\mathbf y}
+\]</span> Consider a multivariable function <span class="math inline">\(y(t,x;\alpha)\)</span>: <span class="math display">\[
+y\colon (0,T) \times \Omega \times \Gamma \to \mathbb R
+\]</span></p>
+<p>and the separated spaces for time, space, and uncertainty: <span class="math display">\[
+\Ltt,\quad \Lto, \quad\text{and}\quad\Ltg.
+\]</span></p>
+</section>
+<section id="time-space-pce-galerkin-discretization" class="slide level2">
+<h2>Time-Space-PCE Galerkin Discretization</h2>
+<p>Finite dimensional “subspaces”:</p>
+<ul>
+<li><span class="math inline">\(S = \spann\{\psi_1, \dotsc, \psi_s\} \subset \Ltt\)</span>,</li>
+<li><span class="math inline">\(X = \spann\{\phi_1, \dotsc, \phi_r\} \subset \Lto\)</span>,</li>
+<li><span class="math inline">\(W = \spann\{\eta_1, \dotsc, \eta_p\}~`\subset\mspace{-4mu}`~ \Ltg\)</span>,</li>
+</ul>
+<p>and the Galerkin ansatz in <span class="math inline">\(\by \in S\otimes X \otimes W\)</span>: <span class="math display">\[
+\by = \sum_{i=1}^s\sum_{j=1}^r\sum_{k=1}^p \yijk \psi_i \phi_j \eta_k
+\]</span></p>
+</section>
+<section id="time-space-pce-galerkin-pod" class="slide level2">
+<h2>Time-Space-PCE Galerkin POD</h2>
+<p>Goal: Dimension Reduction</p>
+<p>Idea: Find a subspace <span class="math inline">\(\hat S \subset S\)</span> and projection <span class="math inline">\(\Pi_{\hat S}\)</span> such that <span class="math display">\[
+\|\Pi_{\hat S} \by - \by\|_{S\otimes X \otimes W} 
+\]</span> is minimal.</p>
+</section>
+<section class="slide level2">
+
+<p>Consider the discrete product space with bases <span class="math display">\[
     \mathcal V = \prod_{i=1}^N \mathcal V_{i}, \quad
     \mathcal V_i = \spann\{\psi_i^k\}_{k=1,\dots,d_i}, \quad
     \Psi_i:=[\psi_i^1, \dotsc, \psi_i^{d_i}]^T
@@ -133,24 +205,6 @@
 <li><p>Submitted to <em>Int. J. Numerical Methods in Engineering</em></p></li>
 <li><p>Preprint: <a href="https://arxiv.org/abs/2009.01055">arxiv:2009.01055</a></p></li>
 <li><p>Code: <a href="https://doi.org/10.5281/zenodo.4005724">doi:10.5281/zenodo.4005724</a></p></li>
-</ul>
-</section>
-
-<section id="csc-tech-talks" class="title-slide slide level1">
-<h1>CSC tech talks</h1>
-<ul>
-<li><p>Idea: A topic and <strong>everyone</strong> brings his workflow</p>
-<ul>
-<li><p>can be hand-drawn flow chart</p></li>
-<li><p>plan for 5 minutes presentation time</p></li>
-</ul></li>
-<li><p>In the session, we draw will <strong>randomly choose 3</strong> candidates</p></li>
-<li><p>After that, we will discuss the workflows</p></li>
-<li><p>Dates and topics:</p>
-<ul>
-<li><p>November 26: <strong>paper writing</strong></p></li>
-<li><p>December 3: <strong>code writing</strong></p></li>
-</ul></li>
 </ul>
 </section>
     </div>
