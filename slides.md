@@ -62,9 +62,19 @@ $$
 
 ## Overview of approaches
 
-* Monte Carlo Methods
+ * Monte Carlo (MC)
+   * slow, but highly parallelizable
+   * many *improvements* like *Multi Level MC*, *Markov Chain MC*
+   * little overhead for additional dimensions
 
-* Galerkin/Collocation Methods
+ * Galerkin/Collocation methods
+   * e.g., *Polynomial Chaos Expansion* (PCE)
+   * good convergence, effort grows exponentially with the dimensions
+   * model reduction needed: *PCA*, *sparse grids*, *low-rank tensor formats*
+
+ * This talk:
+   * tensor representation of *PCE*
+   * reduction through multidimensional POD
 
 
 # Multidimensional Galerkin POD
@@ -72,7 +82,6 @@ $$
 ## Setup
 $$
 \DeclareMathOperator{\spann}{span}
-\def\xkotkn{{\mathbf x^{k_1 k_2 \dotsm k_N}}}
 \def\yijk{\mathbf y^{i\,j\,k}}
 \def\Vec{\mathop{\mathrm {vec}}\nolimits}
 \def\Ltt{L^2((0,T))}
@@ -111,44 +120,37 @@ Idea: Find a subspace $\hat S \subset S$ and projection $\Pi_{\hat S}$ such that
 $$
 \|\Pi_{\hat S} \by - \by\|_{S\otimes X \otimes W} 
 $$
-is minimal.
+is minimal...
+
+. . .
+
+minimal in the sense that if there exists $\hat{\hat S}$ such that 
+$\|\Pi_{\hat{\hat S}} \by - \by\|_{S\otimes X \otimes W}$ is smaller, than the dimension of $\hat{\hat S}$ is larger than that of $\hat S$.
+
+## Solution: HOSVD -- higher order SVD
+
+Recall:
+$$
+\by = \sum_{i=1}^s\sum_{j=1}^r\sum_{k=1}^p \yijk \psi_i \phi_j \eta_k
+$$
+that is, with $\mathbf Y = [\yijk]$, the discrete function
+
+$$
+    y \in S\otimes X \otimes W \longleftrightarrow \mathbf Y \in \mathbb R^{s \times r \times p}
+$$
+
+can be interpreted and reduced as a tensor $\mathbf Y$.
 
 ---
 
-Consider the discrete product space with bases
-$$
-    \mathcal V = \prod_{i=1}^N \mathcal V_{i}, \quad
-    \mathcal V_i = \spann\{\psi_i^k\}_{k=1,\dots,d_i}, \quad
-    \Psi_i:=[\psi_i^1, \dotsc, \psi_i^{d_i}]^T
-$$
+Vice versa:
 
-. . .
+> Theorem: The $\hat s$-dimensional subspace $\hat S\subset S$ that optimally parametrizes $y\in S\otimes X \otimes V$ in $\hat S \otimes X \otimes V$ is defined by the $\hat s$ leading mode-(1) singular vectors of $\mathbf Y \in \mathbb R^{s \times r \times p}$
 
-and write $x\in \mathcal V$ as
-$$
-    x = \sum_{k_1 = 1}^{d_1}\sum_{k_2 = 1}^{d_2} \dotsm \sum_{k_N = 1}^{d_N} \xkotkn \psi_1^{k_1}\psi_2^{k_2}\dotsm\psi_N^{k_N}
-$$
+Notes:
 
-. . .
-
-or
-
-$$
-    x = \Vec(\mathbf X)^T \bigl [\Psi_N \otimes \dotsm \otimes \Psi_2 \otimes \Psi_1 \bigr], \quad \text{where }
-    \mathbf X = \bigl[ \xkotkn  \bigr].
-$$
-
-## That is...
-
-$$
-    x \in \prod_{i=1}^N \mathcal V_{i} \longleftrightarrow \mathbf X \in \mathbb R^{d_1 \times d_2 \times \dotsm \times d_N}
-$$
-
-and the tensor $\mathbf X$ can be reduced by 
-
-$$
-\text{HOSVD} \longleftrightarrow \text{multidimensional (Galerkin) POD}
-$$
+ * The reduced spaces define a reduced Galerkin discretization.
+ * This works for any dimension in a product space $V = \prod_{\ell=1}^NV_i$.
 
 # Application Example
 
@@ -169,26 +171,43 @@ where we assume that the diffusivity coefficient depends on a random vector $\al
 ## Ansatz
 
 
-\def\Hoi{H_0^1(\Omega)}
-\providecommand\Ltgi[1]{L^2(\Gamma _ {#1};\nspinva{#1})}
 \providecommand{\nspinva}[1]{\mathsf{d} \mathbb P _ {#1}}
+\providecommand\Ltgi[1]{L^2(\Gamma _ {#1};\nspinva{#1})}
 
 
 Locate the solution $y$ (depending on space $x$ and the random variable
 $\alpha$) in
 $$
-    \Hoi \cdot \Ltgi 1 \cdot \Ltgi 2 \cdot \dotsm \cdot \Ltgi 4.
+    \Lto \cdot \Ltgi 1 \cdot \Ltgi 2 \cdot \dotsm \cdot \Ltgi 4.
 $$
 
-and use standard FEM and *Polynomial Chaos Expansion* (PCE) for discretization.
+and use 
+
+ * standard FEM space $X$ to discretize $\Lto$,
+ * and *Polynomial Chaos Expansions* (PCE), e.g.,
+   * Lagrange polynomials with
+   * weights and nodes chosen according to the distribution of $\alpha_i$
+   * to define $W_i$, $i=1,2,3,4$.
+
+
 
 ## Approach
 
- * Can train the POD for low-dimensional PCE discretizations
+1. Compute the discrete solution
+$$
+y\in X\otimes \bar W_1 \otimes \bar W_2 \otimes \bar W_3 \otimes \bar W_4
+$$
+for a low-dimensional PCE discretizations.
 
- * And recover, e.g., the expected value of high-order PCE discretizations
+2. Reduce the spatial discretization $X \leftarrow \hat X$
 
- * Speedup factor of about $16$, huge memory savings
+3. Compute the discrete solution
+$$
+y\in \hat X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4
+$$
+for a high-dimensional PCE discretizations.
+
+4. Compare to $y\in X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4$
 
 ## Result {data-background-image="pics/pcepoddiff.png"}
 
@@ -198,17 +217,35 @@ and use standard FEM and *Polynomial Chaos Expansion* (PCE) for discretization.
 
  * Error in *expected value* over space.
 
- * Full order model: $5^4 \times 90'000$ (`PCE x FEM`)
+ * Full solve: $5^4 \times 90'000$ (`PCE x FEM`)
 
- * Red order model: $2^4 \times 90'000$ + $5^4 \times 12$
+ * POD + training: $2^4 \times 90'000$ + $5^4 \times 12$
 
  * Error level $\approx 10^{-6}$
+
+ * Speed up factor $\approx 16$
+
+ * Saved memory $\approx 97$\% 
 
  * Monte Carlo: No convergence after $10^6 \times 90'000$
 
 :::
 
-# Resources
+# Conclusion
+
+## ... and Outlook
+
+ * Multidimensional Galerkin POD applies naturally for FEM/PCE discretizations.
+
+ * Significant saves of computation time and memory requirements.
+
+ * Outlook: Optimal Control and time dependent problems.
+
+. . .
+
+Thank You!
+
+## Resources
 
 * Submitted to *Int. J. Numerical Methods in Engineering*
 
