@@ -145,7 +145,7 @@ can be interpreted and reduced as a tensor $\mathbf Y$.
 
 Vice versa:
 
-> Theorem: The $\hat s$-dimensional subspace $\hat S\subset S$ that optimally parametrizes $y\in S\otimes X \otimes V$ in $\hat S \otimes X \otimes V$ is defined by the $\hat s$ leading mode-(1) singular vectors of $\mathbf Y \in \mathbb R^{s \times r \times p}$
+> Theorem: The $\hat s$-dimensional subspace $\hat S\subset S$ that optimally parametrizes $y\in S\otimes X \otimes W$ in $\hat S \otimes X \otimes W$ is defined by the $\hat s$ leading mode-(1) singular vectors of $\mathbf Y \in \mathbb R^{s \times r \times p}$.
 
 Notes:
 
