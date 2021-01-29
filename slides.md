@@ -21,9 +21,9 @@ $$
 $$
 where $\alpha$ is a random variable.
 
- * Then, *the* solution $y$ is a random variable depending of $\alpha$.
+ * Then, *the* solution $y$ is a random variable depending on $\alpha$.
 
- * Of interest
+ * Of interest:
  $$
  \mathbb E_\alpha y
  $$
@@ -32,21 +32,21 @@ where $\alpha$ is a random variable.
 ## Sampling Approach (Monte Carlo)
 
 1. Draw a sample of $\alpha$: 
-$$(\alpha^{(1)}, \alpha^{(2)}, \alpha^{(3)}, \alpha^{(4)})$$
+$$(\alpha^{(1)}, \alpha^{(2)}, \alpha^{(3)}, \alpha^{(4)}).$$
 
 2. Compute the sample of $y(\alpha)$:  
-$$(y(\alpha^{(1)}), y(\alpha^{(2)}), y(\alpha^{(3)}), y(\alpha^{(4)}))$$
+$$(y(\alpha^{(1)}), y(\alpha^{(2)}), y(\alpha^{(3)}), y(\alpha^{(4)})).$$
 
 3. Compute the empirical expected value
 $$
-\hat {\mathbb E}_\alpha = \frac{1}{4}(y(\alpha^{(1)})+ y(\alpha^{(2)})+ y(\alpha^{(3)})+ y(\alpha^{(4)}))
+\hat {\mathbb E}_\alpha = \frac{1}{4}(y(\alpha^{(1)})+ y(\alpha^{(2)})+ y(\alpha^{(3)})+ y(\alpha^{(4)})).
 $$
 
 ## Collocation/Galerkin Approaches
 
 1. *Discretize* the uncertainty, e.g., by shape functions $\eta_i$
 $$
-\hat y(\alpha) = \sum_{i=1}^4 y_i \eta_i(\alpha)
+\hat y(\alpha) = \sum_{i=1}^4 y_i \eta_i(\alpha).
 $$
 
 2. Compute the coefficient functions $y_i$, e.g., through solving
@@ -70,7 +70,7 @@ $$
  * Galerkin/Collocation methods
    * e.g., *Polynomial Chaos Expansion* (PCE)
    * good convergence, effort grows exponentially with the dimensions
-   * model reduction needed: *PCA*, *sparse grids*, *low-rank tensor formats*
+   * model reduction needed: *PCA*, *sparse grids*, *PGD*, *low-rank tensor formats*
 
  * This talk:
    * tensor representation of *PCE*
@@ -109,7 +109,7 @@ Finite dimensional "subspaces":
 
 and the Galerkin ansatz in $\by \in S\otimes X \otimes W$:
 $$
-\by = \sum_{i=1}^s\sum_{j=1}^r\sum_{k=1}^p \yijk \psi_i \phi_j \eta_k
+\by = \sum_{i=1}^s\sum_{j=1}^r\sum_{k=1}^p \yijk \psi_i \phi_j \eta_k.
 $$
 
 ## Time-Space-PCE Galerkin POD
@@ -178,12 +178,12 @@ where we assume that the diffusivity coefficient depends on a random vector $\al
 Locate the solution $y$ (depending on space $x$ and the random variable
 $\alpha$) in
 $$
-    \Lto \cdot \Ltgi 1 \cdot \Ltgi 2 \cdot \dotsm \cdot \Ltgi 4.
+    \Lto \cdot \Ltgi 1 \cdot \Ltgi 2 \cdot \dotsm \cdot \Ltgi 4
 $$
 
 and use 
 
- * standard FEM space $X$ to discretize $\Lto$,
+ * a standard FEM space $X$ to discretize $\Lto$,
  * and *Polynomial Chaos Expansions* (PCE), e.g.,
    * Lagrange polynomials with
    * weights and nodes chosen according to the distribution of $\alpha_i$
@@ -199,7 +199,7 @@ y\in X\otimes \bar W_1 \otimes \bar W_2 \otimes \bar W_3 \otimes \bar W_4
 $$
 for a low-dimensional PCE discretizations.
 
-2. Reduce the spatial discretization $X \leftarrow \hat X$
+2. Reduce the spatial discretization $X \leftarrow \hat X$.
 
 3. Compute the discrete solution
 $$
@@ -207,7 +207,7 @@ y\in \hat X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4
 $$
 for a high-dimensional PCE discretizations.
 
-4. Compare to $y\in X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4$
+4. Compare to $y\in X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4$.
 
 ## Result {data-background-image="pics/pcepoddiff.png"}
 
@@ -225,9 +225,9 @@ for a high-dimensional PCE discretizations.
 
  * Speed up factor $\approx 16$
 
- * Saved memory $\approx 97$\% 
+ * Memory savings: $\approx 97$\% 
 
- * Monte Carlo: No convergence after $10^6 \times 90'000$
+ * Monte Carlo: No convergence after $10^6 \times 90'000$.
 
 :::
 
@@ -237,9 +237,9 @@ for a high-dimensional PCE discretizations.
 
  * Multidimensional Galerkin POD applies naturally for FEM/PCE discretizations.
 
- * Significant saves of computation time and memory requirements.
+ * Significant savings of computation time and memory.
 
- * Outlook: Optimal Control and time dependent problems.
+ * Outlook: Optimal control and time dependent problems.
 
 . . .
 
