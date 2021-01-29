@@ -42,8 +42,8 @@
 <li><p>The <em>heat equation</em> with uncertainty in the coefficient <span class="math inline">\(\kappa\)</span>: <span class="math display">\[
 -\kappa(\alpha) \Delta y = f,
 \]</span> where <span class="math inline">\(\alpha\)</span> is a random variable.</p></li>
-<li><p>Then, <em>the</em> solution <span class="math inline">\(y\)</span> is a random variable depending of <span class="math inline">\(\alpha\)</span>.</p></li>
-<li><p>Of interest <span class="math display">\[
+<li><p>Then, <em>the</em> solution <span class="math inline">\(y\)</span> is a random variable depending on <span class="math inline">\(\alpha\)</span>.</p></li>
+<li><p>Of interest: <span class="math display">\[
  \mathbb E_\alpha y
  \]</span> the expected value of the solution <span class="math inline">\(y\)</span>.</p></li>
 </ul>
@@ -51,11 +51,11 @@
 <section id="sampling-approach-monte-carlo" class="slide level2">
 <h2>Sampling Approach (Monte Carlo)</h2>
 <ol type="1">
-<li><p>Draw a sample of <span class="math inline">\(\alpha\)</span>: <span class="math display">\[(\alpha^{(1)}, \alpha^{(2)}, \alpha^{(3)}, \alpha^{(4)})\]</span></p></li>
+<li><p>Draw a sample of <span class="math inline">\(\alpha\)</span>: <span class="math display">\[(\alpha^{(1)}, \alpha^{(2)}, \alpha^{(3)}, \alpha^{(4)}).\]</span></p></li>
 <li><p>Compute the sample of <span class="math inline">\(y(\alpha)\)</span>:<br />
-<span class="math display">\[(y(\alpha^{(1)}), y(\alpha^{(2)}), y(\alpha^{(3)}), y(\alpha^{(4)}))\]</span></p></li>
+<span class="math display">\[(y(\alpha^{(1)}), y(\alpha^{(2)}), y(\alpha^{(3)}), y(\alpha^{(4)})).\]</span></p></li>
 <li><p>Compute the empirical expected value <span class="math display">\[
-\hat {\mathbb E}_\alpha = \frac{1}{4}(y(\alpha^{(1)})+ y(\alpha^{(2)})+ y(\alpha^{(3)})+ y(\alpha^{(4)}))
+\hat {\mathbb E}_\alpha = \frac{1}{4}(y(\alpha^{(1)})+ y(\alpha^{(2)})+ y(\alpha^{(3)})+ y(\alpha^{(4)})).
 \]</span></p></li>
 </ol>
 </section>
@@ -63,7 +63,7 @@
 <h2>Collocation/Galerkin Approaches</h2>
 <ol type="1">
 <li><p><em>Discretize</em> the uncertainty, e.g., by shape functions <span class="math inline">\(\eta_i\)</span> <span class="math display">\[
-\hat y(\alpha) = \sum_{i=1}^4 y_i \eta_i(\alpha)
+\hat y(\alpha) = \sum_{i=1}^4 y_i \eta_i(\alpha).
 \]</span></p></li>
 <li><p>Compute the coefficient functions <span class="math inline">\(y_i\)</span>, e.g., through solving <span class="math display">\[
 -\kappa(\alpha^{(i)})\Delta \hat y = f
@@ -86,7 +86,7 @@
 <ul>
 <li>e.g., <em>Polynomial Chaos Expansion</em> (PCE)</li>
 <li>good convergence, effort grows exponentially with the dimensions</li>
-<li>model reduction needed: <em>PCA</em>, <em>sparse grids</em>, <em>low-rank tensor formats</em></li>
+<li>model reduction needed: <em>PCA</em>, <em>sparse grids</em>, <em>PGD</em>, <em>low-rank tensor formats</em></li>
 </ul></li>
 <li>This talk:
 <ul>
@@ -126,7 +126,7 @@ y\colon (0,T) \times \Omega \times \Gamma \to \mathbb R
 <li><span class="math inline">\(W = \spann\{\eta_1, \dotsc, \eta_p\}~`\subset\mspace{-4mu}`~ \Ltg\)</span>,</li>
 </ul>
 <p>and the Galerkin ansatz in <span class="math inline">\(\by \in S\otimes X \otimes W\)</span>: <span class="math display">\[
-\by = \sum_{i=1}^s\sum_{j=1}^r\sum_{k=1}^p \yijk \psi_i \phi_j \eta_k
+\by = \sum_{i=1}^s\sum_{j=1}^r\sum_{k=1}^p \yijk \psi_i \phi_j \eta_k.
 \]</span></p>
 </section>
 <section id="time-space-pce-galerkin-pod" class="slide level2">
@@ -182,11 +182,11 @@ y\colon (0,T) \times \Omega \times \Gamma \to \mathbb R
 <section id="ansatz" class="slide level2">
 <h2>Ansatz</h2>
 <p>Locate the solution <span class="math inline">\(y\)</span> (depending on space <span class="math inline">\(x\)</span> and the random variable <span class="math inline">\(\alpha\)</span>) in <span class="math display">\[
-    \Lto \cdot L^2(\Gamma _ {1};\mathsf{d} \mathbb P _ {1}) \cdot L^2(\Gamma _ {2};\mathsf{d} \mathbb P _ {2}) \cdot \dotsm \cdot L^2(\Gamma _ {4};\mathsf{d} \mathbb P _ {4}).
+    \Lto \cdot L^2(\Gamma _ {1};\mathsf{d} \mathbb P _ {1}) \cdot L^2(\Gamma _ {2};\mathsf{d} \mathbb P _ {2}) \cdot \dotsm \cdot L^2(\Gamma _ {4};\mathsf{d} \mathbb P _ {4})
 \]</span></p>
 <p>and use</p>
 <ul>
-<li>standard FEM space <span class="math inline">\(X\)</span> to discretize <span class="math inline">\(\Lto\)</span>,</li>
+<li>a standard FEM space <span class="math inline">\(X\)</span> to discretize <span class="math inline">\(\Lto\)</span>,</li>
 <li>and <em>Polynomial Chaos Expansions</em> (PCE), e.g.,
 <ul>
 <li>Lagrange polynomials with</li>
@@ -201,11 +201,11 @@ y\colon (0,T) \times \Omega \times \Gamma \to \mathbb R
 <li><p>Compute the discrete solution <span class="math display">\[
 y\in X\otimes \bar W_1 \otimes \bar W_2 \otimes \bar W_3 \otimes \bar W_4
 \]</span> for a low-dimensional PCE discretizations.</p></li>
-<li><p>Reduce the spatial discretization <span class="math inline">\(X \leftarrow \hat X\)</span></p></li>
+<li><p>Reduce the spatial discretization <span class="math inline">\(X \leftarrow \hat X\)</span>.</p></li>
 <li><p>Compute the discrete solution <span class="math display">\[
 y\in \hat X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4
 \]</span> for a high-dimensional PCE discretizations.</p></li>
-<li><p>Compare to <span class="math inline">\(y\in X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4\)</span></p></li>
+<li><p>Compare to <span class="math inline">\(y\in X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4\)</span>.</p></li>
 </ol>
 </section>
 <section id="result" class="slide level2" data-background-image="pics/pcepoddiff.png">
@@ -218,8 +218,8 @@ y\in \hat X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4
 <li><p>POD + training: <span class="math inline">\(2^4 \times 90&#39;000\)</span> + <span class="math inline">\(5^4 \times 12\)</span></p></li>
 <li><p>Error level <span class="math inline">\(\approx 10^{-6}\)</span></p></li>
 <li><p>Speed up factor <span class="math inline">\(\approx 16\)</span></p></li>
-<li><p>Saved memory <span class="math inline">\(\approx 97\)</span>%</p></li>
-<li><p>Monte Carlo: No convergence after <span class="math inline">\(10^6 \times 90&#39;000\)</span></p></li>
+<li><p>Memory savings: <span class="math inline">\(\approx 97\)</span>%</p></li>
+<li><p>Monte Carlo: No convergence after <span class="math inline">\(10^6 \times 90&#39;000\)</span>.</p></li>
 </ul>
 </div>
 </div>
@@ -233,8 +233,8 @@ y\in \hat X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4
 <h2>… and Outlook</h2>
 <ul>
 <li><p>Multidimensional Galerkin POD applies naturally for FEM/PCE discretizations.</p></li>
-<li><p>Significant saves of computation time and memory requirements.</p></li>
-<li><p>Outlook: Optimal Control and time dependent problems.</p></li>
+<li><p>Significant savings of computation time and memory.</p></li>
+<li><p>Outlook: Optimal control and time dependent problems.</p></li>
 </ul>
 <div class="fragment">
 <p>Thank You!</p>
