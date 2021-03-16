@@ -3,6 +3,7 @@ author:
  - Jan Heiland (MPI Magdeburg)
  - Peter Benner (MPI Magdeburg)
 title: Space and Chaos-Expansion Galerkin POD for UQ of PDEs with Random Parameters
+subtitle: virtuelle GAMM 202021 an der Uni Kassel
 title-slide-attributes:
     data-background-image: pics/mpi-bridge.gif
 parallaxBackgroundImage: pics/csc-en.svg
@@ -29,7 +30,7 @@ where $\alpha$ is a random variable.
  $$
  the expected value of the solution $y$.
 
-## Sampling Approach (Monte Carlo)
+<!-- ## Sampling Approach (Monte Carlo)
 
 1. Draw a sample of $\alpha$: 
 $$(\alpha^{(1)}, \alpha^{(2)}, \alpha^{(3)}, \alpha^{(4)}).$$
@@ -59,22 +60,32 @@ at given collocation points.
 $$
 \mathbb E_\alpha y \approx \mathbb E_\alpha \hat y = \sum_{i=1}^4 y_i \mathbb E_\alpha \eta_i.
 $$
+-->
+
 
 ## Overview of approaches
 
- * Monte Carlo (MC)
-   * slow, but highly parallelizable
-   * many *improvements* like *Multi Level MC*, *Markov Chain MC*
-   * little overhead for additional dimensions
+## Monte Carlo (MC)
 
- * Galerkin/Collocation methods
-   * e.g., *Polynomial Chaos Expansion* (PCE)
-   * good convergence, effort grows exponentially with the dimensions
-   * model reduction needed: *PCA*, *sparse grids*, *PGD*, *low-rank tensor formats*
+ * slow, but highly parallelizable
 
- * This talk:
-   * tensor representation of *PCE*
-   * reduction through multidimensional POD
+ * many *improvements* like *Multi Level MC*, *Markov Chain MC*
+
+ * little overhead for additional dimensions
+
+## Galerkin/Collocation methods
+
+ * e.g., *Polynomial Chaos Expansion* (PCE)
+
+ * good convergence, effort grows exponentially with the dimensions
+
+ * model reduction needed: *PCA*, *sparse grids*, *PGD*, *low-rank tensor formats*
+
+## This talk:
+
+ * tensor representation of *PCE*
+
+ * reduction through multidimensional POD
 
 
 # Multidimensional Galerkin POD
