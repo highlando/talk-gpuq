@@ -8,6 +8,7 @@ title-slide-attributes:
     data-background-image: pics/mpi-bridge.gif
 parallaxBackgroundImage: pics/csc-en.svg
 parallaxBackgroundSize: 1000px 1200px
+bibliography: gpuq-talk.bib
 ---
 
 # Introduction
@@ -80,6 +81,11 @@ $$
  * good convergence, effort grows exponentially with the dimensions
 
  * model reduction needed: *PCA*, *sparse grids*, *PGD*, *low-rank tensor formats*
+
+ * general Hilbert space theory as in [@SoiG04]
+
+ * for applications in PDE approximations see [@BabTZ04]
+
 
 ## This talk:
 
@@ -264,3 +270,9 @@ Thank You!
 
 * Code: [doi:10.5281/zenodo.4005724](https://doi.org/10.5281/zenodo.4005724)
 
+---
+
+---
+nocite: |
+  @SoiG04, @BabTZ04
+...
