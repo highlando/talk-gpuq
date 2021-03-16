@@ -2,7 +2,7 @@
 author: 
  - Jan Heiland (MPI Magdeburg)
  - Peter Benner (MPI Magdeburg)
-title: Space and Chaos-Expansion Galerkin POD for UQ of PDEs with Random Parameters
+title: Tensor-Galerkin POD for UQ in PDEs with Multivariate Random Parameters
 subtitle: virtuelle GAMM 202021 an der Uni Kassel
 title-slide-attributes:
     data-background-image: pics/mpi-bridge.gif
@@ -19,7 +19,7 @@ bibliography: gpuq-talk.bib
 
  * The *heat equation* with uncertainty in the coefficient $\kappa$:
 $$
--\kappa(\alpha) \Delta y = f,
+-\kappa(\alpha) \Delta y = f, \quad \text{in }\Omega,
 $$
 where $\alpha$ is a random variable.
 
@@ -27,9 +27,9 @@ where $\alpha$ is a random variable.
 
  * Of interest:
  $$
- \mathbb E_\alpha y
+ \mathbb E_\alpha y, \quad \text{in }\Omega
  $$
- the expected value of the solution $y$.
+ -- the expected value of the solution $y$.
 
 <!-- ## Sampling Approach (Monte Carlo)
 
@@ -129,6 +129,16 @@ $$
 \by = \sum_{i=1}^s\sum_{j=1}^r\sum_{k=1}^p \yijk \psi_i \phi_j \eta_k.
 $$
 
+## A Modest Example
+
+ * $s=100$  -- "time steps"
+
+ * $r=1000$ -- "nodes in the mesh"
+
+ * $p=10$ -- "features in the uncertainty"
+
+ * gives $s\cdot r \cdot p = 10^6$ -- number of unknowns
+
 ## Time-Space-PCE Galerkin POD
 
 Goal: Dimension Reduction
@@ -195,7 +205,7 @@ where we assume that the diffusivity coefficient depends on a random vector $\al
 Locate the solution $y$ (depending on space $x$ and the random variable
 $\alpha$) in
 $$
-    \Lto \cdot \Ltgi 1 \cdot \Ltgi 2 \cdot \dotsm \cdot \Ltgi 4
+    \Lto \cdot \Ltgi 1 \cdot \Ltgi 2 \cdot \Ltgi 3 \cdot \Ltgi 4
 $$
 
 and use 
