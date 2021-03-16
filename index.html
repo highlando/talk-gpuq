@@ -5,7 +5,7 @@
   <meta name="generator" content="pandoc">
   <meta name="author" content="Jan Heiland (MPI Magdeburg)">
   <meta name="author" content="Peter Benner (MPI Magdeburg)">
-  <title>Space and Chaos-Expansion Galerkin POD for UQ of PDEs with Random Parameters</title>
+  <title>Tensor-Galerkin POD for UQ in PDEs with Multivariate Random Parameters</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -26,7 +26,8 @@
     <div class="slides">
 
 <section id="title-slide" data-background-image="pics/mpi-bridge.gif">
-  <h1 class="title">Space and Chaos-Expansion Galerkin POD for UQ of PDEs with Random Parameters</h1>
+  <h1 class="title">Tensor-Galerkin POD for UQ in PDEs with Multivariate Random Parameters</h1>
+  <p class="subtitle">virtuelle GAMM 202021 an der Uni Kassel</p>
   <p class="author">Jan Heiland (MPI Magdeburg)</p>
   <p class="author">Peter Benner (MPI Magdeburg)</p>
 </section>
@@ -40,59 +41,71 @@
 <h2>Example Problem Setup</h2>
 <ul>
 <li><p>The <em>heat equation</em> with uncertainty in the coefficient <span class="math inline">\(\kappa\)</span>: <span class="math display">\[
--\kappa(\alpha) \Delta y = f,
+-\kappa(\alpha) \Delta y = f, \quad \text{in }\Omega,
 \]</span> where <span class="math inline">\(\alpha\)</span> is a random variable.</p></li>
 <li><p>Then, <em>the</em> solution <span class="math inline">\(y\)</span> is a random variable depending on <span class="math inline">\(\alpha\)</span>.</p></li>
 <li><p>Of interest: <span class="math display">\[
- \mathbb E_\alpha y
- \]</span> the expected value of the solution <span class="math inline">\(y\)</span>.</p></li>
+ \mathbb E_\alpha y, \quad \text{in }\Omega
+ \]</span> – the expected value of the solution <span class="math inline">\(y\)</span>.</p></li>
 </ul>
-</section>
-<section id="sampling-approach-monte-carlo" class="slide level2">
-<h2>Sampling Approach (Monte Carlo)</h2>
-<ol type="1">
-<li><p>Draw a sample of <span class="math inline">\(\alpha\)</span>: <span class="math display">\[(\alpha^{(1)}, \alpha^{(2)}, \alpha^{(3)}, \alpha^{(4)}).\]</span></p></li>
-<li><p>Compute the sample of <span class="math inline">\(y(\alpha)\)</span>:<br />
-<span class="math display">\[(y(\alpha^{(1)}), y(\alpha^{(2)}), y(\alpha^{(3)}), y(\alpha^{(4)})).\]</span></p></li>
-<li><p>Compute the empirical expected value <span class="math display">\[
+<!-- ## Sampling Approach (Monte Carlo)
+
+1. Draw a sample of $\alpha$: 
+$$(\alpha^{(1)}, \alpha^{(2)}, \alpha^{(3)}, \alpha^{(4)}).$$
+
+2. Compute the sample of $y(\alpha)$:  
+$$(y(\alpha^{(1)}), y(\alpha^{(2)}), y(\alpha^{(3)}), y(\alpha^{(4)})).$$
+
+3. Compute the empirical expected value
+$$
 \hat {\mathbb E}_\alpha = \frac{1}{4}(y(\alpha^{(1)})+ y(\alpha^{(2)})+ y(\alpha^{(3)})+ y(\alpha^{(4)})).
-\]</span></p></li>
-</ol>
-</section>
-<section id="collocationgalerkin-approaches" class="slide level2">
-<h2>Collocation/Galerkin Approaches</h2>
-<ol type="1">
-<li><p><em>Discretize</em> the uncertainty, e.g., by shape functions <span class="math inline">\(\eta_i\)</span> <span class="math display">\[
+$$
+
+## Collocation/Galerkin Approaches
+
+1. *Discretize* the uncertainty, e.g., by shape functions $\eta_i$
+$$
 \hat y(\alpha) = \sum_{i=1}^4 y_i \eta_i(\alpha).
-\]</span></p></li>
-<li><p>Compute the coefficient functions <span class="math inline">\(y_i\)</span>, e.g., through solving <span class="math display">\[
+$$
+
+2. Compute the coefficient functions $y_i$, e.g., through solving
+$$
 -\kappa(\alpha^{(i)})\Delta \hat y = f
-\]</span> at given collocation points.</p></li>
-<li><p>Compute the expected value of <span class="math inline">\(\hat y\)</span> <span class="math display">\[
+$$
+at given collocation points.
+
+3. Compute the expected value of $\hat y$
+$$
 \mathbb E_\alpha y \approx \mathbb E_\alpha \hat y = \sum_{i=1}^4 y_i \mathbb E_\alpha \eta_i.
-\]</span></p></li>
-</ol>
+$$
+-->
 </section>
 <section id="overview-of-approaches" class="slide level2">
 <h2>Overview of approaches</h2>
+</section>
+<section id="monte-carlo-mc" class="slide level2">
+<h2>Monte Carlo (MC)</h2>
 <ul>
-<li>Monte Carlo (MC)
+<li><p>slow, but highly parallelizable</p></li>
+<li><p>many <em>improvements</em> like <em>Multi Level MC</em>, <em>Markov Chain MC</em></p></li>
+<li><p>little overhead for additional dimensions</p></li>
+</ul>
+</section>
+<section id="galerkincollocation-methods" class="slide level2">
+<h2>Galerkin/Collocation methods</h2>
 <ul>
-<li>slow, but highly parallelizable</li>
-<li>many <em>improvements</em> like <em>Multi Level MC</em>, <em>Markov Chain MC</em></li>
-<li>little overhead for additional dimensions</li>
-</ul></li>
-<li>Galerkin/Collocation methods
+<li><p>e.g., <em>Polynomial Chaos Expansion</em> (PCE)</p></li>
+<li><p>good convergence, effort grows exponentially with the dimensions</p></li>
+<li><p>model reduction needed: <em>PCA</em>, <em>sparse grids</em>, <em>PGD</em>, <em>low-rank tensor formats</em></p></li>
+<li><p>general Hilbert space theory as in <span class="citation" data-cites="SoiG04">(Soize and Ghanem 2004)</span></p></li>
+<li><p>for applications in PDE approximations see <span class="citation" data-cites="BabTZ04">(Babuska, Tempone, and Zouraris 2004)</span></p></li>
+</ul>
+</section>
+<section id="this-talk" class="slide level2">
+<h2>This talk:</h2>
 <ul>
-<li>e.g., <em>Polynomial Chaos Expansion</em> (PCE)</li>
-<li>good convergence, effort grows exponentially with the dimensions</li>
-<li>model reduction needed: <em>PCA</em>, <em>sparse grids</em>, <em>PGD</em>, <em>low-rank tensor formats</em></li>
-</ul></li>
-<li>This talk:
-<ul>
-<li>tensor representation of <em>PCE</em></li>
-<li>reduction through multidimensional POD</li>
-</ul></li>
+<li><p>tensor representation of <em>PCE</em></p></li>
+<li><p>reduction through multidimensional POD</p></li>
 </ul>
 </section></section>
 <section>
@@ -128,6 +141,15 @@ y\colon (0,T) \times \Omega \times \Gamma \to \mathbb R
 <p>and the Galerkin ansatz in <span class="math inline">\(\by \in S\otimes X \otimes W\)</span>: <span class="math display">\[
 \by = \sum_{i=1}^s\sum_{j=1}^r\sum_{k=1}^p \yijk \psi_i \phi_j \eta_k.
 \]</span></p>
+</section>
+<section id="a-modest-example" class="slide level2">
+<h2>A Modest Example</h2>
+<ul>
+<li><p><span class="math inline">\(s=100\)</span> – “time steps”</p></li>
+<li><p><span class="math inline">\(r=1000\)</span> – “nodes in the mesh”</p></li>
+<li><p><span class="math inline">\(p=10\)</span> – “features in the uncertainty”</p></li>
+<li><p>gives <span class="math inline">\(s\cdot r \cdot p = 10^6\)</span> – number of unknowns</p></li>
+</ul>
 </section>
 <section id="time-space-pce-galerkin-pod" class="slide level2">
 <h2>Time-Space-PCE Galerkin POD</h2>
@@ -182,7 +204,7 @@ y\colon (0,T) \times \Omega \times \Gamma \to \mathbb R
 <section id="ansatz" class="slide level2">
 <h2>Ansatz</h2>
 <p>Locate the solution <span class="math inline">\(y\)</span> (depending on space <span class="math inline">\(x\)</span> and the random variable <span class="math inline">\(\alpha\)</span>) in <span class="math display">\[
-    \Lto \cdot L^2(\Gamma _ {1};\mathsf{d} \mathbb P _ {1}) \cdot L^2(\Gamma _ {2};\mathsf{d} \mathbb P _ {2}) \cdot \dotsm \cdot L^2(\Gamma _ {4};\mathsf{d} \mathbb P _ {4})
+    \Lto \cdot L^2(\Gamma _ {1};\mathsf{d} \mathbb P _ {1}) \cdot L^2(\Gamma _ {2};\mathsf{d} \mathbb P _ {2}) \cdot L^2(\Gamma _ {3};\mathsf{d} \mathbb P _ {3}) \cdot L^2(\Gamma _ {4};\mathsf{d} \mathbb P _ {4})
 \]</span></p>
 <p>and use</p>
 <ul>
@@ -247,6 +269,17 @@ y\in \hat X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4
 <li><p>Preprint: <a href="https://arxiv.org/abs/2009.01055">arxiv:2009.01055</a></p></li>
 <li><p>Code: <a href="https://doi.org/10.5281/zenodo.4005724">doi:10.5281/zenodo.4005724</a></p></li>
 </ul>
+</section>
+<section class="slide level2">
+
+<div id="refs" class="references hanging-indent" role="doc-bibliography">
+<div id="ref-BabTZ04">
+<p>Babuska, Ivo, Raúl Tempone, and Georgios E. Zouraris. 2004. “Galerkin Finite Element Approximations of Stochastic Elliptic Partial Differential Equations.” <em>SIAM J. Numer. Anal.</em> 42 (2): 800–825. <a href="https://doi.org/10.1137/S0036142902418680">https://doi.org/10.1137/S0036142902418680</a>.</p>
+</div>
+<div id="ref-SoiG04">
+<p>Soize, Christian, and Roger G. Ghanem. 2004. “Physical Systems with Random Uncertainties: Chaos Representations with Arbitrary Probability Measure.” <em>SIAM J. Sci. Comput.</em> 26 (2): 395–410. <a href="https://doi.org/10.1137/S1064827503424505">https://doi.org/10.1137/S1064827503424505</a>.</p>
+</div>
+</div>
 </section></section>
     </div>
   </div>
