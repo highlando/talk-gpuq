@@ -2,8 +2,8 @@
 author: 
  - Jan Heiland (MPI Magdeburg)
  - Peter Benner (MPI Magdeburg)
-title: Tensor-Galerkin POD for UQ in PDEs with Multivariate Random Parameters
-subtitle: virtuelle GAMM 202021 an der Uni Kassel
+title: Space and Chaos Expansion Galerkin POD for UQ of PDEs with Random Parameters
+subtitle: virtual SIAM-AN 2021
 title-slide-attributes:
     data-background-image: pics/mpi-bridge.gif
 parallaxBackgroundImage: pics/csc-en.svg
@@ -122,7 +122,7 @@ Finite dimensional "subspaces":
 
 * $S = \spann\{\psi_1, \dotsc, \psi_s\} \subset \Ltt$,
 * $X = \spann\{\phi_1, \dotsc, \phi_r\} \subset \Lto$,
-* $W = \spann\{\eta_1, \dotsc, \eta_p\}~`\subset\mspace{-4mu}`~ \Ltg$,
+* $W = \spann\{\eta_1, \dotsc, \eta_p\}~{}^{"}\mspace{-8mu}\subset^{"} \Ltg$,
 
 and the Galerkin ansatz in $\by \in S\otimes X \otimes W$:
 $$
