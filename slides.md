@@ -170,13 +170,14 @@ can be interpreted and reduced as a tensor $\mathbf Y$.
 
 ---
 
-Vice versa:
+> **Theorem**: The $\hat s$-dimensional subspace $\hat S\subset S$ that optimally parametrizes $y\in S\otimes X \otimes W$ in $$\hat S \otimes X \otimes W$$ is defined by the $\hat s$ leading mode-(1) singular vectors of $\mathbf Y \in \mathbb R^{s \times r \times p}$.
 
-> Theorem: The $\hat s$-dimensional subspace $\hat S\subset S$ that optimally parametrizes $y\in S\otimes X \otimes W$ in $\hat S \otimes X \otimes W$ is defined by the $\hat s$ leading mode-(1) singular vectors of $\mathbf Y \in \mathbb R^{s \times r \times p}$.
+. . .
 
-Notes:
+Note that:
 
  * The reduced spaces define a reduced Galerkin discretization.
+
  * This works for any dimension in a product space $V = \prod_{\ell=1}^NV_i$.
 
 # Application Example
@@ -217,24 +218,40 @@ and use
    * to define $W_i$, $i=1,2,3,4$.
 
 
+## Numerical Realization
 
-## Approach
+### 1. Training
 
-1. Compute the discrete solution
+Compute the discrete solution
 $$
-y\in X\otimes \bar W_1 \otimes \bar W_2 \otimes \bar W_3 \otimes \bar W_4
+\bar y\in X\otimes \bar W_1 \otimes \bar W_2 \otimes \bar W_3 \otimes \bar W_4
 $$
-for a low-dimensional PCE discretizations.
+for a **low-dimensional** PCE discretization.
 
-2. Reduce the spatial discretization $X \leftarrow \hat X$.
+---
 
-3. Compute the discrete solution
+### 2. Reduction
+
+Use the resulting tensor data
 $$
-y\in \hat X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4
+\bar y \longleftrightarrow \bar {\mathbf Y} \in \mathbb R^{d_x \times \bar d_1 \times \dotsm \times \bar d_4}
 $$
-for a high-dimensional PCE discretizations.
+to compute an optimized low-dimensional approximation $$\hat X$$ for the FEM space $X$.
 
-4. Compare to $y\in X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4$.
+---
+
+### 3. Prediction
+
+Compute the discrete solution
+$$
+\hat y\in \hat X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4
+$$
+for a **high-dimensional** PCE discretizations and compare to
+
+$$y\in X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4,$$
+
+i.e. the full-order solution.
+
 
 ## Result {data-background-image="pics/pcepoddiff.png"}
 
@@ -246,7 +263,7 @@ for a high-dimensional PCE discretizations.
 
  * Full solve: $5^4 \times 90'000$ (`PCE x FEM`)
 
- * POD + training: $2^4 \times 90'000$ + $5^4 \times 12$
+ * Training + POD: $2^4 \times 90'000$ + $5^4 \times 12$
 
  * Error level $\approx 10^{-6}$
 
