@@ -2,8 +2,8 @@
 author: 
  - Jan Heiland (MPI Magdeburg)
  - Peter Benner (MPI Magdeburg)
-title: Space and Chaos Expansion Galerkin POD for UQ of PDEs with Random Parameters
-subtitle: virtual SIAM-AN 2021
+title: Multidimensional Galerkin POD for UQ of PDE Solutions with Random Parameters
+subtitle: virtual USNCCM 2021 
 title-slide-attributes:
     data-background-image: pics/mpi-bridge.gif
 parallaxBackgroundImage: pics/csc-en.svg
