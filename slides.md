@@ -70,7 +70,7 @@ $$
 
  * slow, but highly parallelizable
 
- * many *improvements* like *Multi Level MC*, *Markov Chain MC*
+ * many *improvements* like *Multi Level MC*
 
  * little overhead for additional dimensions
 
@@ -246,7 +246,7 @@ Compute the discrete solution
 $$
 \hat y\in \hat X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4
 $$
-for a **high-dimensional** PCE discretizations and compare to
+for **high-dimensional** PCE discretizations and compare to
 
 $$y\in X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4,$$
 
@@ -263,7 +263,9 @@ i.e. the full-order solution.
 
  * Full solve: $5^4 \times 90'000$ (`PCE x FEM`)
 
- * Training + POD: $2^4 \times 90'000$ + $5^4 \times 12$
+ * Training: $2^4 \times 90'000$
+
+ * ROM solve: $5^4 \times 12$
 
  * Error level $\approx 10^{-6}$
 
