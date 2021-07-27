@@ -5,7 +5,7 @@
   <meta name="generator" content="pandoc">
   <meta name="author" content="Jan Heiland (MPI Magdeburg)">
   <meta name="author" content="Peter Benner (MPI Magdeburg)">
-  <title>Space and Chaos Expansion Galerkin POD for UQ of PDEs with Random Parameters</title>
+  <title>Multidimensional Galerkin POD for UQ of PDE Solutions with Random Parameters</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -26,8 +26,8 @@
     <div class="slides">
 
 <section id="title-slide" data-background-image="pics/mpi-bridge.gif">
-  <h1 class="title">Space and Chaos Expansion Galerkin POD for UQ of PDEs with Random Parameters</h1>
-  <p class="subtitle">virtual SIAM-AN 2021</p>
+  <h1 class="title">Multidimensional Galerkin POD for UQ of PDE Solutions with Random Parameters</h1>
+  <p class="subtitle">virtual USNCCM 2021</p>
   <p class="author">Jan Heiland (MPI Magdeburg)</p>
   <p class="author">Peter Benner (MPI Magdeburg)</p>
 </section>
@@ -87,7 +87,7 @@ $$
 <h2>Monte Carlo (MC)</h2>
 <ul>
 <li><p>slow, but highly parallelizable</p></li>
-<li><p>many <em>improvements</em> like <em>Multi Level MC</em>, <em>Markov Chain MC</em></p></li>
+<li><p>many <em>improvements</em> like <em>Multi Level MC</em></p></li>
 <li><p>little overhead for additional dimensions</p></li>
 </ul>
 </section>
@@ -237,7 +237,7 @@ y\colon (0,T) \times \Omega \times \Gamma \to \mathbb R
 <h3 id="prediction">3. Prediction</h3>
 <p>Compute the discrete solution <span class="math display">\[
 \hat y\in \hat X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4
-\]</span> for a <strong>high-dimensional</strong> PCE discretizations and compare to</p>
+\]</span> for <strong>high-dimensional</strong> PCE discretizations and compare to</p>
 <p><span class="math display">\[y\in X\otimes W_1 \otimes W_2 \otimes W_3 \otimes W_4,\]</span></p>
 <p>i.e. the full-order solution.</p>
 </section>
@@ -248,7 +248,8 @@ y\colon (0,T) \times \Omega \times \Gamma \to \mathbb R
 <ul>
 <li><p>Error in <em>expected value</em> over space.</p></li>
 <li><p>Full solve: <span class="math inline">\(5^4 \times 90&#39;000\)</span> (<code>PCE x FEM</code>)</p></li>
-<li><p>Training + POD: <span class="math inline">\(2^4 \times 90&#39;000\)</span> + <span class="math inline">\(5^4 \times 12\)</span></p></li>
+<li><p>Training: <span class="math inline">\(2^4 \times 90&#39;000\)</span></p></li>
+<li><p>ROM solve: <span class="math inline">\(5^4 \times 12\)</span></p></li>
 <li><p>Error level <span class="math inline">\(\approx 10^{-6}\)</span></p></li>
 <li><p>Speed up factor <span class="math inline">\(\approx 16\)</span></p></li>
 <li><p>Memory savings: <span class="math inline">\(\approx 97\)</span>%</p></li>
